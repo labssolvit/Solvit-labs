@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://solvitlabs.com/</loc><changefreq>monthly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://solvitlabs.com/services</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://solvitlabs.com/projects</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://solvitlabs.com/pricing</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://solvitlabs.com/about</loc><changefreq>yearly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://solvitlabs.com/case-studies</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://solvitlabs.com/blog</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://solvitlabs.com/careers</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://solvitlabs.com/contact</loc><changefreq>yearly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://solvitlabs.com/services/web-development</loc><priority>0.8</priority></url>
+  <url><loc>https://solvitlabs.com/services/mobile-development</loc><priority>0.8</priority></url>
+  <url><loc>https://solvitlabs.com/services/ui-ux-design</loc><priority>0.8</priority></url>
+  <url><loc>https://solvitlabs.com/services/3d-web-experiences</loc><priority>0.8</priority></url>
+  <url><loc>https://solvitlabs.com/services/ai-solutions</loc><priority>0.8</priority></url>
+  <url><loc>https://solvitlabs.com/work/detox</loc><priority>0.7</priority></url>
+  <url><loc>https://solvitlabs.com/work/nouman-science-academy</loc><priority>0.7</priority></url>
+  <url><loc>https://solvitlabs.com/work/rizwan-portfolio</loc><priority>0.7</priority></url>
+  <url><loc>https://solvitlabs.com/blog/why-we-build-with-react-and-typescript</loc><priority>0.5</priority></url>
+  <url><loc>https://solvitlabs.com/blog/designing-3d-web-experiences-that-stay-fast</loc><priority>0.5</priority></url>
+  <url><loc>https://solvitlabs.com/blog/dark-mode-done-properly</loc><priority>0.5</priority></url>
+</urlset>

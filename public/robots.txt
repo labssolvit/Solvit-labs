@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# Private / internal routes
+Disallow: /admin
+Disallow: /admin/
+Disallow: /dashboard
+Disallow: /dashboard/
+Disallow: /api
+Disallow: /api/
+Disallow: /account
+Disallow: /account/
+
+Sitemap: https://solvitlabs.com/sitemap.xml
