@@ -147,10 +147,13 @@ export function Navbar() {
           <Link
             to="/"
             ariaLabel="Solvit Labs — home"
-            className="display flex items-center gap-2 text-lg font-semibold tracking-[0.06em]"
+            className="display flex items-center"
           >
-            <span className="inline-block h-2 w-2 bg-ember" aria-hidden />
-            <Scramble text={company.name} onHover duration={480} />
+            <img
+              src="/og/solvit-logo.png"
+              alt="Solvit Labs"
+              className="h-8 w-auto object-contain"
+            />
           </Link>
 
           <nav aria-label="Primary" className="hidden items-center gap-5 xl:flex">
