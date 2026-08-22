@@ -3,6 +3,7 @@ import { useMemo, useRef } from "react";
 import * as THREE from "three";
 import { pointerState } from "../../lib/webgl";
 import { useInViewport } from "../../hooks/useInViewport";
+import { useSceneClock } from "../../hooks/useSceneClock";
 
 /** Procedural morph targets — no VDB needed, computed on the fly. */
 function buildShapes(n: number): Float32Array[] {
@@ -107,6 +108,10 @@ function Particles({ shape, count }: { shape: number; count: number }) {
   const points = useRef<THREE.Points>(null!);
   const velocity = useRef(0);
   const targets = useMemo(() => buildShapes(count), [count]);
+  // Continuous clock — `state.clock.elapsedTime` resets to zero whenever the
+  // canvas pauses (`frameloop="never"`), which would otherwise make the
+  // cloud whip around fast when scrolling back into view.
+  const sceneTime = useSceneClock();
 
   const geometry = useMemo(() => {
     const geometry = new THREE.BufferGeometry();
@@ -117,8 +122,8 @@ function Particles({ shape, count }: { shape: number; count: number }) {
     return geometry;
   }, [targets]);
 
-  useFrame((state, delta) => {
-    const t = state.clock.elapsedTime;
+  useFrame((_, delta) => {
+    const t = sceneTime.advance(delta);
     const target = targets[shape % targets.length];
     const pos = geometry.attributes.position as THREE.BufferAttribute;
     const arr = pos.array as Float32Array;

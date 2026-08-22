@@ -4,6 +4,7 @@ import { useRef } from "react";
 import * as THREE from "three";
 import { pointerState } from "../../lib/webgl";
 import { useInViewport } from "../../hooks/useInViewport";
+import { useSceneClock } from "../../hooks/useSceneClock";
 
 interface Slot {
   pos: [number, number, number];
@@ -139,9 +140,13 @@ function MorphingStructure({ active }: { active: number }) {
   const group = useRef<THREE.Group>(null!);
   const core = useRef<THREE.Mesh>(null!);
   const panels = useRef<(THREE.Group | null)[]>([]);
+  // Continuous clock — `state.clock.elapsedTime` resets to zero whenever the
+  // canvas pauses (`frameloop="never"`), which would otherwise make the
+  // structure whip around fast when scrolling back into view.
+  const sceneTime = useSceneClock();
 
-  useFrame((state, delta) => {
-    const t = state.clock.elapsedTime;
+  useFrame((_, delta) => {
+    const t = sceneTime.advance(delta);
     const f = FORMATIONS[active] ?? FORMATIONS[0];
 
     group.current.rotation.y = THREE.MathUtils.damp(

@@ -1,17 +1,29 @@
 import { useState } from "react";
 import { technologies } from "../data/technologies";
+import { logoDataUri } from "../data/technologyLogos";
 import { useReducedMotion } from "../hooks/useReducedMotion";
 import { canUseWebGL } from "../lib/webgl";
 import { SectionHeading } from "./SectionHeading";
 import { TechScene } from "./3d/TechScene";
 import { cn } from "../utils/cn";
 
-function TechFallback() {
+function TechFallback({ active }: { active: string | null }) {
   return (
     <div className="relative flex h-full items-center justify-center overflow-hidden bg-[radial-gradient(100%_100%_at_50%_0%,#1a1013_0%,#140a0d_70%)]">
       <div className="h-40 w-40 rounded-full border border-paper/15" />
       <div className="absolute h-64 w-64 rounded-full border border-paper/8" />
       <div className="absolute h-2 w-2 rounded-full bg-ember" />
+      {active && (() => {
+        const src = logoDataUri(active);
+        return src ? (
+          <img
+            src={src}
+            alt=""
+            aria-hidden
+            className="absolute h-16 w-16"
+          />
+        ) : null;
+      })()}
     </div>
   );
 }
@@ -33,11 +45,11 @@ export function Technology() {
           {/* 3D orbital network — dark tile */}
           <div className="relative order-2 lg:order-1" data-reveal>
             <div className="h-[380px] overflow-hidden border border-ink/12 bg-ink-2 md:h-[520px]">
-              {show3D ? <TechScene active={active} onHover={setActive} /> : <TechFallback />}
+              {show3D ? <TechScene active={active} onHover={setActive} /> : <TechFallback active={active} />}
             </div>
             <div className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2">
               <p className="font-mono text-[0.6rem] uppercase tracking-[0.26em] text-paper/60">
-                {activeTech ? activeTech.name : "Hover a node"}
+                {activeTech ? activeTech.name : "Hover a tech icon"}
               </p>
             </div>
           </div>

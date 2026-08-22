@@ -23,7 +23,6 @@ import {
   type Currency,
   type PricingTier,
 } from "../data/pricing";
-import { company } from "../data/company";
 import { useReducedMotion } from "../hooks/useReducedMotion";
 import { canUseWebGL } from "../lib/webgl";
 import { Link } from "../lib/router";
@@ -97,16 +96,18 @@ function TierCard({
   tier,
   currency,
   reduced,
+  index,
 }: {
   tier: PricingTier;
   currency: Currency;
   reduced: boolean;
+  index: number;
 }) {
   const Icon = TIER_ICONS[tier.id as keyof typeof TIER_ICONS];
   const tiltRef = useRef<HTMLElement>(null);
 
   const onTilt = (e: MouseEvent<HTMLElement>) => {
-    if (tier.id !== "premium" || reduced || !window.matchMedia("(pointer: fine)").matches) return;
+    if (reduced || !window.matchMedia("(pointer: fine)").matches) return;
     const el = tiltRef.current!;
     const r = el.getBoundingClientRect();
     const px = (e.clientX - r.left) / r.width - 0.5;
@@ -128,13 +129,14 @@ function TierCard({
       ref={tiltRef}
       onMouseMove={onTilt}
       onMouseLeave={resetTilt}
+      style={{ animationDelay: `-${(index * 1.5).toFixed(1)}s` }}
       aria-label={`${tier.name} package, ${price}${tier.price.plus ? " and up" : ""}`}
       className={cn(
         "group relative flex flex-col border bg-white/[0.03] p-8 backdrop-blur-md transition-[border-color,box-shadow,transform] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform hover:-translate-y-1.5 md:p-9",
         tier.featured
           ? "border-ember/50 shadow-[0_0_80px_-28px_rgba(200,16,46,0.55)] lg:-my-3 lg:py-12"
           : "border-white/10 hover:border-ember/40 hover:shadow-[0_24px_70px_-30px_rgba(200,16,46,0.35)]",
-        tier.id === "premium" && !reduced && "animate-[tier-float_7s_ease-in-out_infinite]"
+        !reduced && "animate-[tier-float_7s_ease-in-out_infinite]"
       )}
       data-reveal
     >
@@ -266,8 +268,8 @@ export function PricingPage() {
           </div>
 
           <div className="grid gap-8 pt-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-            {tiers.map((tier) => (
-              <TierCard key={tier.id} tier={tier} currency={currency} reduced={reduced} />
+            {tiers.map((tier, i) => (
+              <TierCard key={tier.id} tier={tier} currency={currency} reduced={reduced} index={i} />
             ))}
           </div>
           <p className="mt-8 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-paper/35" data-reveal>
@@ -460,13 +462,14 @@ export function PricingPage() {
             solution around your goals.
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4" data-reveal data-delay="0.16">
-            <a
-              href={`mailto:${company.email}`}
+            <Link
+              to="/contact"
+              ariaLabel="Talk to Solvit — start your project"
               className="group inline-flex items-center gap-3 bg-paper px-8 py-4 font-display text-[0.8rem] font-medium uppercase tracking-[0.18em] text-ink transition-colors duration-400 hover:bg-ember hover:text-white"
             >
               Talk to Solvit
               <ArrowRight className="h-4 w-4 transition-transform duration-400 group-hover:translate-x-1" aria-hidden />
-            </a>
+            </Link>
             <Button to="/projects" variant="outline-invert">
               View Our Work
             </Button>

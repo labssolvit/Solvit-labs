@@ -3,8 +3,10 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
 import { technologies } from "../../data/technologies";
+import { getLogoTexture } from "../../lib/logoTexture";
 import { pointerState } from "../../lib/webgl";
 import { useInViewport } from "../../hooks/useInViewport";
+import { useSceneClock } from "../../hooks/useSceneClock";
 
 const RINGS = [
   { radius: 1.55, tilt: [Math.PI / 2.3, 0.15, 0] as const, speed: 0.32 },
@@ -27,6 +29,10 @@ function Network({
 }) {
   const group = useRef<THREE.Group>(null!);
   const core = useRef<THREE.Mesh>(null!);
+  // Continuous clock — `state.clock.elapsedTime` resets to zero whenever the
+  // canvas pauses (`frameloop="never"`), which would otherwise make the
+  // network whip around fast when scrolling back into view.
+  const sceneTime = useSceneClock();
 
   const nodes = useMemo<NodeInfo[]>(
     () =>
@@ -37,7 +43,7 @@ function Network({
       }),
     []
   );
-  const nodeRefs = useRef<(THREE.Mesh | null)[]>([]);
+  const nodeRefs = useRef<(THREE.Sprite | null)[]>([]);
 
   const lineGeo = useMemo(() => {
     const g = new THREE.BufferGeometry();
@@ -53,8 +59,15 @@ function Network({
     [lineGeo]
   );
 
-  useFrame((state, delta) => {
-    const t = state.clock.elapsedTime;
+  // Brand logo textures for each tech — generated synchronously from the
+  // embedded SVG path data, so the icon nodes are available immediately.
+  const nodeTextures = useMemo(
+    () => technologies.map((t) => getLogoTexture(t.id)),
+    []
+  );
+
+  useFrame((_, delta) => {
+    const t = sceneTime.advance(delta);
     group.current.rotation.y = THREE.MathUtils.damp(
       group.current.rotation.y,
       t * 0.05 + pointerState.x * 0.12,
@@ -69,10 +82,10 @@ function Network({
     );
     core.current.rotation.y += delta * 0.3;
 
-    // Orbiting nodes
+    // Orbiting icon nodes
     nodes.forEach((n, i) => {
-      const mesh = nodeRefs.current[i];
-      if (!mesh) return;
+      const sprite = nodeRefs.current[i];
+      if (!sprite) return;
       const ring = RINGS[n.ring];
       const a = n.angle + t * ring.speed;
       const x = Math.cos(a) * ring.radius;
@@ -81,17 +94,13 @@ function Network({
       const v = new THREE.Vector3(x, 0, z);
       const e = new THREE.Euler(ring.tilt[0], ring.tilt[1], ring.tilt[2]);
       v.applyEuler(e);
-      mesh.position.copy(v);
+      sprite.position.copy(v);
       const isActive = technologies[i].id === active;
-      const target = isActive ? 1.9 : 1;
-      mesh.scale.setScalar(THREE.MathUtils.damp(mesh.scale.x, target, 6, delta));
-      const mat = mesh.material as THREE.MeshStandardMaterial;
-      mat.emissiveIntensity = THREE.MathUtils.damp(
-        mat.emissiveIntensity,
-        isActive ? 0.9 : 0.06,
-        6,
-        delta
-      );
+      const target = isActive ? 0.72 : 0.44;
+      sprite.scale.setScalar(THREE.MathUtils.damp(sprite.scale.x, target, 6, delta));
+      const mat = sprite.material as THREE.SpriteMaterial;
+      mat.opacity = THREE.MathUtils.damp(mat.opacity, isActive ? 1 : 0.72, 6, delta);
+      mat.color.set(isActive ? "#ffffff" : "#a3a3ad");
     });
 
     // Connection line to active node
@@ -128,30 +137,32 @@ function Network({
         </mesh>
       ))}
 
-      {/* Technology nodes */}
-      {technologies.map((tech, i) => (
-        <mesh
-          key={tech.id}
-          ref={(el) => {
-            nodeRefs.current[i] = el;
-          }}
-          onPointerOver={(e) => {
-            e.stopPropagation();
-            onHover(tech.id);
-          }}
-          onPointerOut={() => onHover(null)}
-        >
-          <sphereGeometry args={[0.075, 20, 20]} />
-          <meshStandardMaterial
-            color={tech.id === active ? "#FF3B47" : "#8f8f99"}
-            metalness={1}
-            roughness={0.25}
-            emissive="#C8102E"
-            emissiveIntensity={0.06}
-            envMapIntensity={1.2}
-          />
-        </mesh>
-      ))}
+      {/* Technology icon nodes — brand logos orbit the core */}
+      {nodeTextures.map((tex, i) =>
+        tex ? (
+          <sprite
+            key={technologies[i].id}
+            ref={(el) => {
+              nodeRefs.current[i] = el;
+            }}
+            scale={[0.44, 0.44, 0.44]}
+            onPointerOver={(e) => {
+              e.stopPropagation();
+              onHover(technologies[i].id);
+            }}
+            onPointerOut={() => onHover(null)}
+          >
+            <spriteMaterial
+              map={tex}
+              color="#a3a3ad"
+              transparent
+              opacity={0.72}
+              depthWrite={false}
+              toneMapped={false}
+            />
+          </sprite>
+        ) : null
+      )}
 
       <primitive object={lineObj} />
     </group>
