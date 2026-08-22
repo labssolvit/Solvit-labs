@@ -11,6 +11,7 @@ import * as THREE from "three";
 import { heroScroll } from "../../lib/sceneState";
 import { pointerState } from "../../lib/webgl";
 import { useInViewport } from "../../hooks/useInViewport";
+import { useSceneClock } from "../../hooks/useSceneClock";
 import { ParticleField } from "./ParticleField";
 
 /* ---------------------------------- rigs ---------------------------------- */
@@ -45,6 +46,10 @@ function Structure({ mobile }: { mobile: boolean }) {
   const core = useRef<THREE.Group>(null!);
   const satellite = useRef<THREE.Mesh>(null!);
   const disc = useRef<THREE.Mesh>(null!);
+  // Continuous clock — `state.clock.elapsedTime` is reset to zero every time
+  // the canvas pauses (`frameloop="never"`), which would make these spinners
+  // whip around fast when scrolling back into view.
+  const sceneTime = useSceneClock();
 
   const blocks = useMemo(
     () =>
@@ -64,8 +69,8 @@ function Structure({ mobile }: { mobile: boolean }) {
     [mobile]
   );
 
-  useFrame((state, delta) => {
-    const t = state.clock.elapsedTime;
+  useFrame((_, delta) => {
+    const t = sceneTime.advance(delta);
     const p = heroScroll.progress;
     const g = group.current;
 

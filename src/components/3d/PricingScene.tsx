@@ -4,14 +4,19 @@ import { useRef } from "react";
 import * as THREE from "three";
 import { pointerState } from "../../lib/webgl";
 import { useInViewport } from "../../hooks/useInViewport";
+import { useSceneClock } from "../../hooks/useSceneClock";
 import { ParticleField } from "./ParticleField";
 
 function Artifact({ subdued }: { subdued: boolean }) {
   const group = useRef<THREE.Group>(null!);
   const ring = useRef<THREE.Mesh>(null!);
+  // Continuous clock — `state.clock.elapsedTime` resets to zero whenever the
+  // canvas pauses (`frameloop="never"`), which would otherwise make the
+  // artifact whip around fast when scrolling back into view.
+  const sceneTime = useSceneClock();
 
-  useFrame((state, delta) => {
-    const t = state.clock.elapsedTime;
+  useFrame((_, delta) => {
+    const t = sceneTime.advance(delta);
     const g = group.current;
     g.rotation.y = THREE.MathUtils.damp(
       g.rotation.y,

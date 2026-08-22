@@ -1,6 +1,7 @@
 import { useFrame } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
+import { useSceneClock } from "../../hooks/useSceneClock";
 
 interface ParticleFieldProps {
   count?: number;
@@ -21,6 +22,9 @@ export function ParticleField({
   drift = 0.018,
 }: ParticleFieldProps) {
   const ref = useRef<THREE.Points>(null!);
+  // Continuous clock — survives the canvas frameloop pause/resume, so the
+  // drift keeps the same angular speed after scrolling the field back in.
+  const sceneTime = useSceneClock();
 
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
@@ -35,8 +39,8 @@ export function ParticleField({
     return arr;
   }, [count, radius]);
 
-  useFrame((state) => {
-    ref.current.rotation.y = state.clock.elapsedTime * drift;
+  useFrame((_, delta) => {
+    ref.current.rotation.y = sceneTime.advance(delta) * drift;
   });
 
   return (

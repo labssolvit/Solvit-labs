@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { technologies } from "../../data/technologies";
 import { pointerState } from "../../lib/webgl";
 import { useInViewport } from "../../hooks/useInViewport";
+import { useSceneClock } from "../../hooks/useSceneClock";
 
 const RINGS = [
   { radius: 1.55, tilt: [Math.PI / 2.3, 0.15, 0] as const, speed: 0.32 },
@@ -27,6 +28,10 @@ function Network({
 }) {
   const group = useRef<THREE.Group>(null!);
   const core = useRef<THREE.Mesh>(null!);
+  // Continuous clock — `state.clock.elapsedTime` resets to zero whenever the
+  // canvas pauses (`frameloop="never"`), which would otherwise make the
+  // network whip around fast when scrolling back into view.
+  const sceneTime = useSceneClock();
 
   const nodes = useMemo<NodeInfo[]>(
     () =>
@@ -53,8 +58,8 @@ function Network({
     [lineGeo]
   );
 
-  useFrame((state, delta) => {
-    const t = state.clock.elapsedTime;
+  useFrame((_, delta) => {
+    const t = sceneTime.advance(delta);
     group.current.rotation.y = THREE.MathUtils.damp(
       group.current.rotation.y,
       t * 0.05 + pointerState.x * 0.12,
