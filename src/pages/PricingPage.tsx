@@ -23,7 +23,6 @@ import {
   type Currency,
   type PricingTier,
 } from "../data/pricing";
-import { company } from "../data/company";
 import { useReducedMotion } from "../hooks/useReducedMotion";
 import { canUseWebGL } from "../lib/webgl";
 import { Link } from "../lib/router";
@@ -463,13 +462,14 @@ export function PricingPage() {
             solution around your goals.
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4" data-reveal data-delay="0.16">
-            <a
-              href={`mailto:${company.email}`}
+            <Link
+              to="/contact"
+              ariaLabel="Talk to Solvit — start your project"
               className="group inline-flex items-center gap-3 bg-paper px-8 py-4 font-display text-[0.8rem] font-medium uppercase tracking-[0.18em] text-ink transition-colors duration-400 hover:bg-ember hover:text-white"
             >
               Talk to Solvit
               <ArrowRight className="h-4 w-4 transition-transform duration-400 group-hover:translate-x-1" aria-hidden />
-            </a>
+            </Link>
             <Button to="/projects" variant="outline-invert">
               View Our Work
             </Button>
