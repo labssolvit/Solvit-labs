@@ -44,7 +44,7 @@ function ServicesDropdown({ onNavigate }: { onNavigate: () => void }) {
         onFocus={() => setOpen(true)}
         className={cn(
           "u-link inline-flex items-center gap-1.5 font-mono text-[0.64rem] uppercase tracking-[0.18em] transition-colors",
-          isActive ? "text-ink" : "text-ink/60 hover:text-ink"
+          isActive ? "text-paper" : "text-paper/60 hover:text-paper"
         )}
       >
         Services
@@ -59,13 +59,13 @@ function ServicesDropdown({ onNavigate }: { onNavigate: () => void }) {
         role="menu"
         aria-label="Services"
         className={cn(
-          "absolute left-1/2 top-full mt-4 w-72 -translate-x-1/2 border border-ink/10 bg-[#fbfaf7] shadow-[0_24px_60px_-24px_rgba(10,10,11,0.28)] backdrop-blur-xl transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+          "absolute left-1/2 top-full mt-4 w-72 -translate-x-1/2 border border-paper/10 bg-ink-3 shadow-[0_24px_60px_-24px_rgba(10,10,11,0.28)] backdrop-blur-xl transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
           open
             ? "pointer-events-auto translate-y-0 opacity-100"
             : "pointer-events-none -translate-y-2 opacity-0"
         )}
       >
-        <div className="border-b border-ink/10 px-5 py-3">
+        <div className="border-b border-paper/10 px-5 py-3">
           <Link
             to="/services"
             onNavigate={onNavigate}
@@ -82,13 +82,13 @@ function ServicesDropdown({ onNavigate }: { onNavigate: () => void }) {
               setOpen(false);
               onNavigate();
             }}
-            className="group flex items-center justify-between px-5 py-3.5 transition-colors hover:bg-paper-2"
+            className="group flex items-center justify-between px-5 py-3.5 transition-colors hover:bg-paper/10"
             role="menuitem"
           >
-            <span className="text-[0.85rem] font-medium text-ink/80 transition-colors group-hover:text-ink">
+            <span className="text-[0.85rem] font-medium text-paper/80 transition-colors group-hover:text-paper">
               {s.title}
             </span>
-            <span className="font-mono text-[0.6rem] text-ink/35">{s.index}</span>
+            <span className="font-mono text-[0.6rem] text-paper/40">{s.index}</span>
           </Link>
         ))}
       </div>
@@ -138,10 +138,10 @@ export function Navbar() {
       <header className="fixed inset-x-0 top-0 z-[120] px-page">
         <div
           className={cn(
-            "max-page mt-4 flex h-16 items-center justify-between border px-5 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] md:px-7",
+            "max-page mt-4 flex h-16 items-center justify-between border bg-ink-2/85 px-5 backdrop-blur-xl transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] md:px-7",
             scrolled
-              ? "border-ink/10 bg-[#fbfaf7]/80 shadow-[0_16px_44px_-22px_rgba(10,10,11,0.35)] backdrop-blur-xl"
-              : "border-transparent bg-transparent"
+              ? "border-paper/10 shadow-[0_16px_44px_-22px_rgba(10,10,11,0.45)]"
+              : "border-paper/10"
           )}
         >
           <Link
@@ -152,7 +152,7 @@ export function Navbar() {
             <img
               src="/og/solvit-logo.png"
               alt="Solvit Labs"
-              className="h-8 w-auto object-contain"
+              className="h-8 w-auto brightness-0 invert object-contain"
             />
           </Link>
 
@@ -168,7 +168,7 @@ export function Navbar() {
                     to={l.href}
                     className={cn(
                       "u-link font-mono text-[0.64rem] uppercase tracking-[0.18em] transition-colors",
-                      isActive(l.href) ? "text-ink" : "text-ink/60 hover:text-ink"
+                      isActive(l.href) ? "text-paper" : "text-paper/60 hover:text-paper"
                     )}
                     ariaLabel={isActive(l.href) ? `${l.label} (current page)` : undefined}
                   >
@@ -181,7 +181,7 @@ export function Navbar() {
           <div className="flex items-center gap-3">
             <Link
               to="/contact"
-              className="group hidden items-center gap-2 bg-ember px-5 py-2.5 font-display text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:bg-ink hover:text-paper lg:inline-flex"
+              className="group hidden items-center gap-2 bg-ember px-5 py-2.5 font-display text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-white transition-colors duration-300 hover:bg-paper hover:text-ink lg:inline-flex"
             >
               Start a Project
               <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden />
@@ -192,7 +192,7 @@ export function Navbar() {
               aria-expanded={open}
               aria-controls="mobile-menu"
               aria-label={open ? "Close menu" : "Open menu"}
-              className="flex h-10 w-10 items-center justify-center border border-ink/15 text-ink xl:hidden"
+              className="flex h-10 w-10 items-center justify-center border border-paper/15 text-paper xl:hidden"
             >
               {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
@@ -204,7 +204,7 @@ export function Navbar() {
       <div
         id="mobile-menu"
         className={cn(
-          "fixed inset-0 z-[110] flex flex-col justify-between overflow-y-auto bg-paper px-page pb-10 pt-32 transition-[clip-path,opacity] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] xl:hidden",
+          "fixed inset-0 z-[110] flex flex-col justify-between overflow-y-auto bg-ink-2 px-page pb-10 pt-32 transition-[clip-path,opacity] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] xl:hidden",
           open
             ? "pointer-events-auto opacity-100 [clip-path:inset(0_0_0%_0)]"
             : "pointer-events-none opacity-0 [clip-path:inset(0_0_100%_0)]"
@@ -219,7 +219,7 @@ export function Navbar() {
                 to={l.href}
                 onNavigate={() => setOpen(false)}
                 className={cn(
-                  "display flex items-baseline gap-4 border-b border-ink/10 py-4 text-3xl font-medium transition-all duration-500",
+                  "display flex items-baseline gap-4 border-b border-paper/10 py-4 text-3xl font-medium text-paper transition-all duration-500",
                   open ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
                 )}
                 style={{ transitionDelay: open ? `${100 + i * 50}ms` : "0ms" }}
@@ -228,13 +228,13 @@ export function Navbar() {
                 {l.label}
               </Link>
               {l.label === "Services" && (
-                <div className="flex flex-col gap-2 border-b border-ink/10 py-4 pl-10">
+                <div className="flex flex-col gap-2 border-b border-paper/10 py-4 pl-10">
                   {services.map((s) => (
                     <Link
                       key={s.id}
                       to={`/services/${s.id}`}
                       onNavigate={() => setOpen(false)}
-                      className="text-sm text-ink/60 transition-colors hover:text-ink"
+                      className="text-sm text-paper/60 transition-colors hover:text-paper"
                     >
                       {s.title}
                     </Link>
@@ -252,7 +252,7 @@ export function Navbar() {
         >
           <a
             href={`mailto:${company.email}`}
-            className="font-mono text-xs uppercase tracking-[0.22em] text-ink/50"
+            className="font-mono text-xs uppercase tracking-[0.22em] text-paper/50"
           >
             {company.email}
           </a>
