@@ -97,16 +97,18 @@ function TierCard({
   tier,
   currency,
   reduced,
+  index,
 }: {
   tier: PricingTier;
   currency: Currency;
   reduced: boolean;
+  index: number;
 }) {
   const Icon = TIER_ICONS[tier.id as keyof typeof TIER_ICONS];
   const tiltRef = useRef<HTMLElement>(null);
 
   const onTilt = (e: MouseEvent<HTMLElement>) => {
-    if (tier.id !== "premium" || reduced || !window.matchMedia("(pointer: fine)").matches) return;
+    if (reduced || !window.matchMedia("(pointer: fine)").matches) return;
     const el = tiltRef.current!;
     const r = el.getBoundingClientRect();
     const px = (e.clientX - r.left) / r.width - 0.5;
@@ -128,13 +130,14 @@ function TierCard({
       ref={tiltRef}
       onMouseMove={onTilt}
       onMouseLeave={resetTilt}
+      style={{ animationDelay: `-${(index * 1.5).toFixed(1)}s` }}
       aria-label={`${tier.name} package, ${price}${tier.price.plus ? " and up" : ""}`}
       className={cn(
         "group relative flex flex-col border bg-white/[0.03] p-8 backdrop-blur-md transition-[border-color,box-shadow,transform] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform hover:-translate-y-1.5 md:p-9",
         tier.featured
           ? "border-ember/50 shadow-[0_0_80px_-28px_rgba(200,16,46,0.55)] lg:-my-3 lg:py-12"
           : "border-white/10 hover:border-ember/40 hover:shadow-[0_24px_70px_-30px_rgba(200,16,46,0.35)]",
-        tier.id === "premium" && !reduced && "animate-[tier-float_7s_ease-in-out_infinite]"
+        !reduced && "animate-[tier-float_7s_ease-in-out_infinite]"
       )}
       data-reveal
     >
@@ -266,8 +269,8 @@ export function PricingPage() {
           </div>
 
           <div className="grid gap-8 pt-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-            {tiers.map((tier) => (
-              <TierCard key={tier.id} tier={tier} currency={currency} reduced={reduced} />
+            {tiers.map((tier, i) => (
+              <TierCard key={tier.id} tier={tier} currency={currency} reduced={reduced} index={i} />
             ))}
           </div>
           <p className="mt-8 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-paper/35" data-reveal>
