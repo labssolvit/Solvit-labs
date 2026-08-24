@@ -152,7 +152,7 @@ export function Navbar() {
             <img
               src="/og/solvit-logo.png"
               alt="Solvit Labs"
-              className="h-8 w-auto brightness-0 invert object-contain"
+              className="h-8 w-auto logo-ember object-contain"
             />
           </Link>
 

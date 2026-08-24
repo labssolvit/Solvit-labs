@@ -108,6 +108,14 @@ body {
   margin-inline: auto;
 }
 
+/* Navbar logo tinted to the brand "ember" red (#c8102e) — the same red as the
+   "Start a Project" button. `brightness(0) saturate(100%)` flattens the source
+   to black (preserving alpha), then the chain maps black to exactly #c8102e. */
+.logo-ember {
+  filter: brightness(0) saturate(100%) invert(19%) sepia(80%) saturate(1200%)
+    hue-rotate(300.45deg) brightness(100%) contrast(99.5%);
+}
+
 /* Hairline rules */
 .hairline-t { border-top: 1px solid color-mix(in srgb, currentColor 12%, transparent); }
 .hairline-b { border-bottom: 1px solid color-mix(in srgb, currentColor 12%, transparent); }
